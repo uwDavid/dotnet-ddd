@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{CEB41F22-54AE-46E3-B7BA-93290116BDCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{3387722B-0009-4713-9D01-13BC0D72EEC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "Services\Catalog\Catalog.API\Catalog.API.csproj", "{18AD26A3-5945-4C93-872B-D380105D5370}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{344575C9-409A-4062-8796-AAF8FC04B3D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj", "{B92FF07E-66F5-450B-B05E-EBE21A6C78A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18AD26A3-5945-4C93-872B-D380105D5370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18AD26A3-5945-4C93-872B-D380105D5370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18AD26A3-5945-4C93-872B-D380105D5370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18AD26A3-5945-4C93-872B-D380105D5370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B92FF07E-66F5-450B-B05E-EBE21A6C78A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B92FF07E-66F5-450B-B05E-EBE21A6C78A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B92FF07E-66F5-450B-B05E-EBE21A6C78A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B92FF07E-66F5-450B-B05E-EBE21A6C78A0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3387722B-0009-4713-9D01-13BC0D72EEC7} = {CEB41F22-54AE-46E3-B7BA-93290116BDCE}
+		{18AD26A3-5945-4C93-872B-D380105D5370} = {3387722B-0009-4713-9D01-13BC0D72EEC7}
+		{B92FF07E-66F5-450B-B05E-EBE21A6C78A0} = {344575C9-409A-4062-8796-AAF8FC04B3D6}
+	EndGlobalSection
+EndGlobal
