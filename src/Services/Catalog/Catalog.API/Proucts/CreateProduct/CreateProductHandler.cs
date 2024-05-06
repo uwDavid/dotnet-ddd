@@ -1,4 +1,6 @@
-using MediatR;
+using BuildingBlocks.CQRS;
+
+using Catalog.API.Models;
 
 namespace Catalog.API.Products.CreateProduct;
 
@@ -9,9 +11,10 @@ public record CreateProductCommand(
     string Description,
     string ImageFile,
     decimal Price
-) : IRequest<CreateProductResult>;
-// represents data we need to pass into command to create Product
+) : ICommand<CreateProductResult>;
+// Note: represents data we need to pass into command to create Product
 // matches Product.cs
+// Note: we use ICommand interface defined in Buliding Blocks
 
 public record CreateProductResult(
     Guid Id
@@ -19,11 +22,28 @@ public record CreateProductResult(
 // represents response type
 
 
-internal class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, CreateProductResult>
+internal class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
-    public Task<CreateProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         // business logic to create a Product
-        throw new NotImplementedException();
+        // 1 - create Product instance from command obj
+        // 2 - save to database
+        // 3 - return result 
+
+        // 1 - create Product instance
+        var product = new Product
+        {
+            Name = command.Name,
+            Category = command.Category,
+            Description = command.Description,
+            ImageFile = command.ImageFile,
+            Price = command.Price
+        };
+
+        // 2 - save to db - skip for now
+
+        // 3 - return result 
+        return new CreateProductResult(Guid.NewGuid());
     }
 }
