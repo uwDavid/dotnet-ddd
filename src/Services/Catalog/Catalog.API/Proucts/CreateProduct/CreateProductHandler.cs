@@ -1,3 +1,5 @@
+using FluentValidation;
+
 namespace Catalog.API.Products.CreateProduct;
 
 // Define command + result type
@@ -18,15 +20,28 @@ public record CreateProductResult(
 // represents response type
 
 
-internal class CreateProductCommandHandler(IDocumentSession session) : ICommandHandler<CreateProductCommand, CreateProductResult>
+internal class CreateProductCommandHandler(
+    IDocumentSession session, IValidator<CreateProductCommand> validator)
+    : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
+
+        // perform validation
         // business logic to create a Product
         // 1 - create Product instance from command obj
         // 2 - save to database
         // 3 - return result 
 
+        // validation - using fluent validator
+        var result = await validator.ValidateAsync(command, cancellationToken);
+        var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
+        if (errors.Any())
+        {
+            throw new ValidationException(errors.FirstOrDefault());
+        }
+
+        // Business Logic
         // 1 - create Product instance
         var product = new Product
         {
