@@ -1,7 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
-
-using Marten.Linq.SoftDeletes;
-
 namespace Catalog.API.Products.UpdateProduct;
 
 public record UpdateProductCommand(
@@ -12,6 +8,8 @@ public record UpdateProductCommand(
     string ImageFile,
     decimal Price
 ) : ICommand<UpdateProductResult>;
+
+
 
 public record UpdateProductResult(bool IsSuccess);
 

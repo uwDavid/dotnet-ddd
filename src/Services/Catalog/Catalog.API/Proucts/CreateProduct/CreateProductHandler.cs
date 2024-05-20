@@ -21,7 +21,8 @@ public record CreateProductResult(
 
 
 internal class CreateProductCommandHandler(
-    IDocumentSession session, IValidator<CreateProductCommand> validator)
+    // IDocumentSession session, IValidator<CreateProductCommand> validator) // manual validation
+    IDocumentSession session, ILogger<CreateProductCommandHandler> logger)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
@@ -33,15 +34,16 @@ internal class CreateProductCommandHandler(
         // 2 - save to database
         // 3 - return result 
 
-        // validation - using fluent validator
-        var result = await validator.ValidateAsync(command, cancellationToken);
-        var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
-        if (errors.Any())
-        {
-            throw new ValidationException(errors.FirstOrDefault());
-        }
+        // manual validation - using fluent validator
+        // var result = await validator.ValidateAsync(command, cancellationToken);
+        // var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
+        // if (errors.Any())
+        // {
+        //     throw new ValidationException(errors.FirstOrDefault());
+        // }
 
         // Business Logic
+        logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);
         // 1 - create Product instance
         var product = new Product
         {
