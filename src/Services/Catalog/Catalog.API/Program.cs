@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add Services to container
 var assembly = typeof(Program).Assembly;
+var psqlConnection = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddMediatR(config =>
 {
     // add required services to MediatR
@@ -19,7 +20,7 @@ builder.Services.AddCarter();
 
 builder.Services.AddMarten(opts =>
 {
-    opts.Connection(builder.Configuration.GetConnectionString("Database")!);
+    opts.Connection(psqlConnection!);
 }).UseLightweightSessions();
 
 // seed data
@@ -32,6 +33,9 @@ builder.Services.AddValidatorsFromAssembly(assembly);
 
 // add CustomExceptionHandler - for global error handling
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(psqlConnection!);
 
 var app = builder.Build();
 
@@ -65,5 +69,7 @@ app.UseExceptionHandler(options => { });
 //         await context.Response.WriteAsJsonAsync(problemDetails);
 //     });
 // });
+
+app.UseHealthChecks("/health");
 
 app.Run();
