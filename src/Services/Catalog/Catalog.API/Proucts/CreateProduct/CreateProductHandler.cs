@@ -22,7 +22,7 @@ public record CreateProductResult(
 
 internal class CreateProductCommandHandler(
     // IDocumentSession session, IValidator<CreateProductCommand> validator) // manual validation
-    IDocumentSession session, ILogger<CreateProductCommandHandler> logger)
+    IDocumentSession session)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
@@ -43,7 +43,8 @@ internal class CreateProductCommandHandler(
         // }
 
         // Business Logic
-        logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);
+        // logger.LogInformation("CreateProductCommandHandler.Handle called with {@Command}", command);
+
         // 1 - create Product instance
         var product = new Product
         {

@@ -7,8 +7,7 @@ public record GetProdcutsResult(IEnumerable<Product> Products);
 
 
 public class GetProductsQueryHandler(
-    IDocumentSession session,  // Marten session DI
-    ILogger<GetProductsQueryHandler> logger)
+    IDocumentSession session)  // Marten session DI
     : IQueryHandler<GetProductsQuery, GetProdcutsResult>
 {
 
@@ -18,7 +17,7 @@ public class GetProductsQueryHandler(
 
     public async Task<GetProdcutsResult> Handle(GetProductsQuery query, CancellationToken cancellationToken)
     {
-        logger.LogInformation("GetProductsQueryHandler.Handle called with {@Query}", query);
+        // logger.LogInformation("GetProductsQueryHandler.Handle called with {@Query}", query);
         var products = await session.Query<Product>().ToListAsync(cancellationToken);
         return new GetProdcutsResult(products);
     }
