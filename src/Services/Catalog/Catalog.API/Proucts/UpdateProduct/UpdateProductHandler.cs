@@ -9,8 +9,6 @@ public record UpdateProductCommand(
     decimal Price
 ) : ICommand<UpdateProductResult>;
 
-
-
 public record UpdateProductResult(bool IsSuccess);
 
 public class UpdateProductCommandHandler(
@@ -23,7 +21,7 @@ public class UpdateProductCommandHandler(
         var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
         if (product is null)
         {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(command.Id);
         }
 
         product.Name = command.Name;

@@ -28,7 +28,7 @@ var app = builder.Build();
 // Configure HTTP middleware pipeline
 app.MapCarter();  // auto maps all routes
 
-// Global Exception Handling
+// Global Exception Handling - lambda approach
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
     exceptionHandlerApp.Run(async context =>
