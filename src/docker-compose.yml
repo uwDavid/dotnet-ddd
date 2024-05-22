@@ -1,0 +1,70 @@
+services:
+  # catalog.api:
+  #   image: catalogapi
+  #   build:
+  #     context: .
+  #     dockerfile: src/Services/Catalog/Catalog.API/DockerFile
+  catalog:
+    container_name: catalog-api
+    image: catalog-api
+    # build:
+    #   context: .
+    #   dockerfile: src/Services/Catalog/Catalog.API/DockerFile
+    environment:
+      # - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_HTTP_PORTS=8080
+      # - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Host=psdb_test;Port=5432;Database=CatalogDb;Username=root;Password=secret;
+    ports:
+      - "6000:8080"
+      # - "6060:8081"
+    volumes:
+      - ms_user_secrets:/home/app/.microsoft/usersecrets:ro
+      - net_https:/home/app/.aspnet/https:ro
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    # links:
+    #   - psdb_test
+    depends_on:
+      - psdb_test
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+    # networks:
+    #   - api-bridge
+
+  psdb_test:
+    container_name: psdb_test
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=CatalogDb
+    # ports:
+    #   - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - psql_data_test:/var/lib/postgresql/data
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+    # networks:
+    #   - api-bridge
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
+    depends_on:
+      - psdb_test
+
+volumes:
+  psql_data_test:
+  ms_user_secrets:
+  net_https:
+# networks:
+#   api-bridge:
+#     name: api-bridge
+#     driver: bridge
