@@ -1,11 +1,13 @@
+version: "3.4"
+
 services:
-  psdb_test:
-    container_name: psdb_test
-    image: postgres:15-alpine
-    restart: always
+  catalogdb:
+    container_name: catalogdb
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=CatalogDb
+    restart: always
     ports:
       - "5432:5432"
     volumes:
@@ -13,12 +15,8 @@ services:
 
   adminer:
     container_name: adminer
-    image: adminer
     restart: always
     ports:
       - 9000:8080
     depends_on:
       - psdb_test
-
-volumes:
-  psql_data_test:
