@@ -2,6 +2,8 @@ using Marten;
 using BuildingBlocks.Behaviors;
 using Basket.API.Data;
 using BuildingBlocks.Exceptions.Handler;
+using HealthChecks.UI.Client;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +23,10 @@ builder.Services.AddMediatR(config =>
 });
 
 // Marten
-var conn = builder.Configuration.GetConnectionString("Database");
+var psqlConnection = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddMarten(opts =>
 {
-    opts.Connection(conn!);
+    opts.Connection(psqlConnection!);
     opts.Schema.For<ShoppingCart>().Identity(x => x.UserName);
 })
     .UseLightweightSessions();
@@ -43,20 +45,50 @@ builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
 
 // Register Redis as Distributed Cache - to use IDistributedCache 
-var redisConnection = builder.Configuration.GetConnectionString("Redis");
+// var redisConnection = builder.Configuration.GetConnectionString("Redis");
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = redisConnection;
+    // options.Configuration = redisConnection;
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    // to work in container
+    // options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+    // {
+    //     EndPoints = { { "cache", 6379 } },
+    //     DefaultDatabase = 0
+    // };
     // options.InstanceName = "Basket";
 });
+Console.WriteLine("Connecting to Redis: " + builder.Configuration.GetConnectionString("Redis"));
+// Need to add additional configuration to connect with Redis on Docker
+var redisOptions = new ConfigurationOptions
+{
+    EndPoints = { { "cache", 6379 } }
+};
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisOptions));
+
 
 // Exception Handler from Building Blocks
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+// Register Healthcheck
+// install the healthcheck extendsions for PostgreSQL and Redis
+builder.Services.AddHealthChecks()
+    .AddNpgSql(psqlConnection!)
+    .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
 
 var app = builder.Build();
 
 app.MapCarter();
 // Configure Exception Handler
 app.UseExceptionHandler(options => { });
+// app.UseHealthChecks("/health"); 
+// install healthcheck.ui
+// json healthcheck response
+app.UseHealthChecks("/health",
+    new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    }
+);
 
 app.Run();
