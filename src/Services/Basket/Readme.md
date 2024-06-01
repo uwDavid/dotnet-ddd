@@ -18,3 +18,8 @@ Use Redis to implement Cache-aside Pattern / Cache invalidation
 #### Decorator Pattern
 
 We develop Cached Respository and Decorate using `Scrutor` package
+
+## gRPC
+
+Basket API calls Product API via gRPC to GetProduct
+Basket API calls Discout Service via gRPC to GetDiscount
