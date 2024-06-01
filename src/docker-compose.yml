@@ -52,7 +52,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       # - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Filename=discount.db
+      # - ConnectionStrings__Database=Filename=discount.db
+      - ConnectionStrings__Database=Host=psdb_test;Port=5432;Database=DiscountDb;Username=root;Password=secret;
     ports:
       - "6002:8080"
       # - "6062:8081"
