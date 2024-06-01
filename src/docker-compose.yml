@@ -36,14 +36,17 @@ services:
       # - ConnectionStrings__Redis=host.docker.internal:6379;
       # - ConnectionStrings__Redis=cache:6379;
       # use service name for dns, and No semi-colon!
+      - GrpcSettings__DiscountUrl=http://discount-grpc:8080
+      # this is on the Docker network and should work at 8080
     ports:
       - "6001:8080"
     depends_on:
       - psdb_test
       - cache
-    links:
-      - psdb_test
-      - cache
+      - discount-grpc
+    # links:
+    #   - psdb_test
+    #   - cache
 
   discount-grpc:
     container_name: discount-grpc

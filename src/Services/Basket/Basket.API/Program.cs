@@ -4,9 +4,11 @@ using Basket.API.Data;
 using BuildingBlocks.Exceptions.Handler;
 using HealthChecks.UI.Client;
 using StackExchange.Redis;
+using Discount.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// APPLICATION SERVICES
 // Cater scans for all ICarter implementations and add those routes
 builder.Services.AddCarter();
 
@@ -22,6 +24,7 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+// DATA SERVICES
 // Marten
 var psqlConnection = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddMarten(opts =>
@@ -58,15 +61,21 @@ builder.Services.AddStackExchangeRedisCache(options =>
     // };
     // options.InstanceName = "Basket";
 });
-Console.WriteLine("Connecting to Redis: " + builder.Configuration.GetConnectionString("Redis"));
+// Console.WriteLine("Connecting to Redis: " + builder.Configuration.GetConnectionString("Redis"));
 // Need to add additional configuration to connect with Redis on Docker
-var redisOptions = new ConfigurationOptions
+// var redisOptions = new ConfigurationOptions
+// {
+//     EndPoints = { { "cache", 6379 } }
+// };
+// builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisOptions));
+
+// GRPC SERVICES - Grpc.AspNetCore
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
 {
-    EndPoints = { { "cache", 6379 } }
-};
-builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisOptions));
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+});
 
-
+// CROSS-CUTTING SERVICES
 // Exception Handler from Building Blocks
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
