@@ -8,13 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddDbContext<DiscountContext>(opts =>
-    opts.UseSqlite(builder.Configuration.GetConnectionString("Database"))
+    opts.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
 );
 
 var app = builder.Build();
 
-// Data/Extension.cs
-app.UseMigration();
+// Data/Extension.cs - for Sqlite auto migration
+// app.UseMigration();
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<GreeterService>();

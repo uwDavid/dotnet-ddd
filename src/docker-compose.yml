@@ -1,9 +1,4 @@
 services:
-  # catalog.api:
-  #   image: catalogapi
-  #   build:
-  #     context: .
-  #     dockerfile: src/Services/Catalog/Catalog.API/DockerFile
   catalog:
     container_name: catalog-api
     image: catalog-api
@@ -50,6 +45,18 @@ services:
       - psdb_test
       - cache
 
+  discount-grpc:
+    container_name: discount-grpc
+    image: discount-grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      # - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Filename=discount.db
+    ports:
+      - "6002:8080"
+      # - "6062:8081"
+
   psdb_test:
     container_name: psdb_test
     image: postgres:15-alpine
@@ -71,13 +78,10 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    expose:
-      - 6379
+    # expose:
+    #   - 6379
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
-    # networks:
-    #   - api-bridge
 
   adminer:
     container_name: adminer
