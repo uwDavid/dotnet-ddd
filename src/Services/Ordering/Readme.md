@@ -16,3 +16,26 @@ Primary domian models are `Order` and `OrderItem`
 | POST   | /orders                       | Create new order         |
 | PUT    | /orders                       | Update an existing order |
 | DELETE | /order/{id}                   | Delete order with Id     |
+
+## Infrastructure Layer
+
+Maps Domain Objects to EF Core Entities
+Migrates tables into SQL Database
+Raise & Dispatch Domain Events
+
+## Adding Migrations
+
+Run below command in `/Order` folder to save migration folder to `Ordering.Infrastructure` layer.
+
+VS Studio:
+
+`Add-Migration InitialCreate -OutputDir Data/Migrations -Project Ordering.Infrastructure -StartupProject Ordering.API`
+
+VS Code:
+
+`dotnet ef migrations add InitialCreate -o Data/Migrations -p Ordering.Infrastructure -s Ordering.API`
+
+## Update Database
+
+In `/Order` folder to run update database command
+`dotnet ef database update -p Ordering.Infrastructure -s Ordering.API`
