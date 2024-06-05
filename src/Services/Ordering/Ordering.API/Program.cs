@@ -1,6 +1,7 @@
 using Ordering.API;
 using Ordering.Application;
 using Ordering.Infrastructure;
+using Ordering.Infrastructure.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ app.UseApiServices();
 
 if (app.Environment.IsDevelopment())
 {
-    // seed data   
+    // runs migration on app startup
     await app.InitialiseDatabaseAsync();
 }
 
