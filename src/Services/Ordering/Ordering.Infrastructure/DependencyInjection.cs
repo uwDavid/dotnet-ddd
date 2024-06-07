@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Ordering.Application.Data;
+
 using Ordering.Infrastructure.Data.Interceptors;
 
 namespace Ordering.Infrastructure;
@@ -31,6 +33,9 @@ public static class DependencyInjection
             // we still have to inject MediatR => this is done in API Program.cs
             // must be before .AddInfrastructure layer
         });
+
+        // Inject db context, for Application Layer
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
 
         return services;
