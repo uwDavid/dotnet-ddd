@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Ordering.Application.Data;
 using Ordering.Application.Dtos;
+using Ordering.Application.Extensions;
 using Ordering.Domain.Models;
 
 namespace Ordering.Application.Orders.Queries.GetOrdersByName;
@@ -24,10 +25,13 @@ public class GetOrdersByNameHandler(IApplicationDbContext dbContext)
             .ToListAsync(cancellationToken);
 
         // 2 - convert to entity
-        var orderDtos = ProjectToOrderDto(orders);
+        // var orderDtos = ProjectToOrderDto(orders);
+
+        // use Extension method
 
         // 3 - return result
-        return new GetOrdersByNameResult(orderDtos);
+        // return new GetOrdersByNameResult(orderDtos);
+        return new GetOrdersByNameResult(orders.ToOrderDtoList());
     }
 
     private List<OrderDto> ProjectToOrderDto(List<Order> orders)
@@ -66,11 +70,12 @@ public class GetOrdersByNameHandler(IApplicationDbContext dbContext)
                 ),
                 Status: order.Status,
                 OrderItems: order.OrderItems.Select(oi => new OrderItemDto(oi.OrderId.Value, oi.ProductId.Value, oi.Quantity, oi.Price)).ToList()
+            );
+
             // .select() => used to project each element of a collection 
             // create a new OrderItemDto for each oi 
             // .ToList() converts projected collection of OrderItemDto => into List<OrderItemDto>
             // -> this is if you need to work with the result as a list rather than enumerable
-            );
 
             result.Add(orderDto);
         }
