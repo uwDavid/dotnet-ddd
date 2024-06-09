@@ -34,6 +34,7 @@ public class GetOrdersByNameHandler(IApplicationDbContext dbContext)
         return new GetOrdersByNameResult(orders.ToOrderDtoList());
     }
 
+    /*
     private List<OrderDto> ProjectToOrderDto(List<Order> orders)
     {
         List<OrderDto> result = new();
@@ -82,5 +83,5 @@ public class GetOrdersByNameHandler(IApplicationDbContext dbContext)
 
         return result;
     }
-
+    */
 }
